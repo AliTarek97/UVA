@@ -1,4 +1,3 @@
-
 #include <bits/stdc++.h>
 using namespace std;
 int dx[] = {1 , 1 ,  0 , -1 , -1 ,-1 , 0 , 1};//E , ES , S , WS , W , WN , N , EN
