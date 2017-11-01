@@ -1,0 +1,62 @@
+//============================================================================
+// Name        : v.cpp
+// Author      :
+// Version     :
+// Copyright   :
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <bits/stdc++.h>
+using namespace std;
+int dx[] = {1 , 1 ,  0 , -1 , -1 ,-1 , 0 , 1};//E , ES , S , WS , W , WN , N , EN
+int dy[] = {0 ,-1 , -1 , -1 ,  0 , 1 , 1 , 1};
+int t , r , c;
+int f[28] = {0};
+char a[1005][1005];
+bool vis[1005][1005];
+vector<pair<int , char> > v;
+
+bool valid(int i , int j){
+	if(i<0 or i==r or j<0 or j==c) return false;
+	else return true;
+}
+void dfs(int x , int y){
+	if(!valid(x , y)) return;
+	vis[x][y] = 1;
+	for(int i=0 ; i<8 ; i+=2){
+		int nx = x+dx[i];
+		int ny = y+dy[i];
+		if(valid(nx , ny) and !vis[nx][ny] and a[nx][ny] == a[x][y]) dfs(nx , ny);
+	}
+}
+bool comp(pair<int , char> i , pair<int , char> j){
+	return i.first > j.first or (i.first == j.first and i.second < j.second);
+}
+int main() {
+	int world = 1;
+	cin>>t;
+	while(t--){
+		cin>>r>>c;
+		for(int i=0 ; i<r ; i++)
+			for(int j=0 ; j<c ; j++) cin>>a[i][j];
+
+		for(int i=0 ; i<r ; i++){
+			for(int j=0 ; j<c ; j++){
+				if(!vis[i][j]){
+					f[a[i][j] - 'a']++;
+					dfs(i , j);
+				}
+			}
+		}
+
+		for(int i=0 ; i<28 ; i++) if(f[i]) v.push_back({f[i] , i + 'a'});
+		sort(v.begin() , v.end() , comp);
+		cout<<"World #"<<world++<<endl;
+		for(int i=0 ; i<(int)v.size() ; i++)cout<<v[i].second<<": "<<v[i].first<<endl;
+		v.clear();
+		memset(vis , 0 ,sizeof vis);
+		memset(f , 0 ,sizeof f);
+	}
+
+	return 0;
+}
