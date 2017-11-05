@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+int dx[]={2,2,-2,-2,1,1,-1,-1};
+int dy[]={-1,1,-1,1,-2,2,-2,2};
+bool visted[105];
+
+bool valid(int x , int y){
+	if(x<1 or x>8 or y<1 or y>8) return false;
+	else return true;
+}
+
+
+int main()
+{
+    string start , end;
+
+    while(cin>>start>>end){
+		pair<int, int> s = {start[1] - '0', start[0] - 'a' + 1}, 
+				e = {(end[1]- '0'), end[0] - 'a' + 1};
+		queue<pair<int, int>> q;
+		map<pair<int, int>, int> dist;
+		dist[s] = 0;
+		q.push(s);
+		while (!q.empty()) {
+			pair<int, int> u = q.front();
+			q.pop();
+			if (u == e) {
+				cout << "To get from " << start << " to " << end << " takes "
+						<< dist[e] << " knight moves." << endl;
+				break;
+			}
+			for (int i = 0; i < 8; i++) {
+				int nx = u.first + dx[i];
+				int ny = u.second + dy[i];
+				if (valid(nx, ny)) {
+					dist[ { nx, ny }] = dist[u] + 1;
+					q.push( { nx, ny });
+				}
+			}
+		}
+    }
+
+    return 0;
+}
