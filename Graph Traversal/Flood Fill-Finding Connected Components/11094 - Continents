@@ -1,0 +1,51 @@
+#include <bits/stdc++.h>
+using namespace std;
+int dx[] = {0 , 1 ,  1 ,  1 ,  0  ,  -1 , -1 ,-1};//E , ES , S , WS , W , WN , N , EN
+int dy[] = {1 , 1 , 0  , -1 , -1  , -1  , 0  , 1};
+bool vis[50][50];
+char a[50][50];
+int n , m , counter = 0 , ans = 0;
+bool valid(int i , int j){
+	if(i<0 or i>=n or j<0 or j>=m) return false;
+	else return true;
+}
+
+void dfs(int x , int y , char c){
+	vis[x][y] = 1;
+	counter++;
+	for(int i=0 ; i<8 ; i+=2){
+		int nx = x+dx[i];
+		int ny = y+dy[i];
+		if(ny == m) ny = ny % m;
+		else if(ny == -1) ny = (ny+m)%m;
+		if(!vis[nx][ny] and a[nx][ny] == a[x][y])dfs(nx , ny , a[nx][ny]);
+	}
+}
+int main()
+{
+
+    while(cin>>n>>m){
+    for(int i=0 ; i<n ;i++)
+    	for(int j=0 ; j<m ; j++) cin>>a[i][j];
+
+    int x , y;
+    cin>>x>>y;
+    char land = a[x][y];
+    dfs(x , y , a[x][y]);
+    ans = 0 , counter = 0;
+    for(int i=0 ; i<n ; i++){
+    	for(int j = 0 ; j<m ; j++){
+    		if(!vis[i][j] and a[i][j] == land){
+    			dfs(i , j , a[i][j]);
+    			ans = max(ans , counter);
+    			counter = 0;
+    		}
+    	}
+    }
+    cout<<ans<<endl;
+    ans = 0 , counter = 0;
+    for(int i=0 ; i<50 ; i++)
+    	for(int j=0 ; j<50 ; j++) vis[i][j] = 0;
+    }
+    return 0;
+}
