@@ -1,0 +1,58 @@
+//============================================================================
+// Name        : round.cpp
+// Author      : 
+// Version     :
+// Copyright   : 
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <bits/stdc++.h>
+using namespace std;
+int dx[] = {0 , 1 ,  1 ,  1 ,  0  ,  -1 , -1 ,-1};//E , ES , S , WS , W , WN , N , EN
+int dy[] = {1 , 1 , 0  , -1 , -1  , -1  , 0  , 1};
+string a[25];
+int ans = 0 , counter = 0 ,  row = 0 , col ;
+bool vis[26][26];
+bool valid(int i , int j){
+	if(i<0 or i>=row or j<0 or j>=col) return false;
+	else return true;
+}
+void dfs(int x , int y){
+	counter++;
+	vis[x][y] = 1;
+	for(int i=0 ; i<8 ; i++){
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+		if(valid(nx , ny) and !vis[nx][ny] and a[nx][ny] == a[x][y])dfs(nx , ny);
+	}
+}
+int main() {
+
+	int t;
+	cin>>t;
+	cin.ignore();
+	string x;
+	getline(cin , x);
+	while(t--){
+		counter = 0; ans = row = 0 ;
+		string s;
+		while(getline(cin , s) and ""!=s){
+			a[row] = s;
+			col = (int)s.size();
+			row++;
+		}
+		for(int i=0 ; i<row ; i++){
+			for(int j=0 ; j<col ; j++){
+				if(a[i][j] == '1' and !vis[i][j]){
+					dfs(i , j);
+					ans = max(ans , counter);
+					counter = 0;
+				}
+			}
+		}
+		cout<<ans<<endl;
+		if(t)cout<<endl;
+		for(int i=0 ; i<26 ; i++)
+			for(int j=0 ; j<26 ; j++) vis[i][j] = 0;
+	}
+}
