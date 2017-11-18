@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std;
+bool differ(string s1 , string s2 , int c){
+	for(int i=0 ; i<(int)s1.size() ; i++){
+			if(s1[i] != s2[i]) c++;
+	}
+
+	if(c == 1) return 1;
+	else return 0;
+}
+int main() {
+	int t;
+	cin>>t;
+	while(t--){
+		string a[205];
+		int size = 0;
+		map<string , int>mp;
+		vector<vector<int>>adj(205);
+
+		for(int i=0 ; ;i++){
+			cin>>a[i];
+			if(a[i] == "*") break;
+			mp[a[i]] = i;
+			size++;
+		}
+
+		for(int i=0 ; i<size ; i++){
+			for(int j=i+1 ; j<size ; j++)
+				if((a[i].size() == a[j].size()) and differ(a[i] , a[j] , 0)){
+					adj[mp[a[i]]].push_back(mp[a[j]]) , adj[mp[a[j]]].push_back(mp[a[i]]);
+				}
+		}
+
+		string start;
+		cin.ignore();
+		while(getline(cin , start) and ""!=start){
+			string s = "" , e = "";
+			int x , y;
+			for(x=0 ; x<(int)start.size() ; x++){
+				if(start[x] == ' ') break;
+				else s += start[x];
+			}
+			for(y = x+1 ; y<(int)start.size() ; y++){
+				if(start[y] == ' ') break;
+				else e += start[y];
+			}
+
+			int dist[205];
+			memset(dist , -1 , sizeof(dist));
+			queue<int> q;
+			dist[mp[s]] = 0;
+			q.push(mp[s]);
+			while(!q.empty()){
+				int u = q.front();
+				q.pop();
+
+				for(int i=0 ; i<(int)adj[u].size() ; i++){
+					int child = adj[u][i];
+					if(dist[child] == -1){
+						dist[child] = 1 + dist[u];
+						q.push(child);
+					}
+				}
+				if(dist[mp[e]] != -1){
+					cout<<s<<' '<<e<<' '<<dist[mp[e]]<<endl;
+					break;
+				}
+			}
+		}
+		if(t!=0)cout<<endl;
+	}
+
+}
