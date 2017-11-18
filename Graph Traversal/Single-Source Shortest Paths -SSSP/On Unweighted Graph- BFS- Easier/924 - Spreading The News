@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	int n;
+	cin>>n;
+	vector< vector<int> > adj(2500);
+	for(int i=0 ; i<n ; i++){
+		int friends;
+		cin>>friends;
+		for(int j=0 ; j<friends ; j++){
+			int x;
+			cin>>x;
+			adj[i].push_back(x);
+		}
+	}
+
+	int t;
+	cin>>t;
+
+	while(t--){
+		int day[2500] = {0} , ans[2500] = {0};
+		bool vis[2500] = {0};
+		queue<int> q;
+		int source;
+		cin>>source;
+
+		vis[source] = 1;
+		day[source] = 0;
+		q.push(source);
+
+		while(!q.empty()){
+			int u=q.front();
+			q.pop();
+
+			for(int i = 0 ; i < (int)adj[u].size() ; i++){
+				int child = adj[u][i];
+				if(!vis[child]){
+					vis[child] = 1;
+					day[child] = 1 + day[u];
+					ans[day[child]]++;
+					q.push(child);
+				}
+			}
+		}
+		if(*max_element(ans , ans+2500) == 0) cout<<0<<endl;
+		else cout<<*max_element(ans , ans+2500)<<' '<<max_element(ans , ans+2500) - ans<<endl;
+	}
+}
