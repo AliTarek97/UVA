@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+using namespace std;
+int n , track , sum = 0 , a[25];
+vector<int> ans;
+bool vis[25];
+map<vector<int> , int> mp;
+void backtrack(int state){
+	for(int i = state ; i<track ; i++){
+		if(!vis[i] and sum+a[i] <= n){
+			sum+=a[i];
+			ans.push_back(a[i]);
+			mp[ans] = sum;
+			backtrack(i+1);
+			ans.pop_back();
+			sum-=a[i];
+			vis[i] = 0;
+		}
+	}
+}
+int main() {
+	while(cin>>n>>track){
+		for(int i=0 ; i<track ; i++)cin>>a[i];
+
+		for(int i=0 ; i<track ; i++){
+			backtrack(i);
+			fill(vis , vis+track , 0);
+			ans.clear();
+			sum = 0;
+		}
+		int maxi = 0 , size ;
+		for(auto it = mp.begin() ; it!=mp.end() ; it++){
+			if(maxi <= it->second){
+				maxi = it->second;
+				ans = it->first;
+				size = (int)it->first.size();
+			}
+		}
+
+		for(int i=0 ; i<size ; i++) cout<<ans[i]<<' ';
+		cout<<"sum:"<<maxi<<endl;
+
+		fill(vis , vis+track , 0);
+		ans.clear();
+		mp.clear();
+		sum = 0;
+	}
+}
