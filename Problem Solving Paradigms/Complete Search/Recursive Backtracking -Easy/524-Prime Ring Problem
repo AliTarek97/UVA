@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+int n , test = 1;
+bool prime[100];
+bool vis[20];
+vector<int>ans;
+void backtrack(int number){
+	if((int)ans.size() == n and prime[ans[0] + ans[n-1]]){
+		for(int i=0 ; i<(int)ans.size() ; i++){
+			printf("%d%c", ans[i]," \n"[i == n - 1]);
+		}
+		return ;
+	}
+
+	for(int i = 2 ; i <= n ; i++){
+		if(!vis[i] and prime[ i + ans[(int)ans.size()-1]]){
+			ans.push_back(i);
+			vis[i] = 1;
+			backtrack(i+1);
+			ans.pop_back();
+			vis[i] = 0;
+		}
+	}
+}
+int main() {
+	prime[0] = prime[1] = 0;
+	fill(prime , prime+100 , 1);
+	for(int i=2 ; i*i<=100 ; i++){
+		if(prime[i]){
+			for(int j=i+i ; j<=100 ; j+=i) prime[j] = 0;
+		}
+	}
+	while(~scanf("%d", &n)){
+        if(test != 1) {
+            puts("");
+        }
+        printf("Case %d:\n", test++);
+		ans.push_back(1);
+		backtrack(2);
+		ans.clear();
+		fill(vis , vis+20 , 0);
+	}
+}
