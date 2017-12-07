@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+int n , Case = 1 , total , sum = 0 , pos;
+int a[35];
+bool seq = true;
+
+void backtrack(int u){
+	if(!seq or sum > total) return;
+	if(sum == total){
+		seq = false;
+		return;
+	}
+	for(int i=u ; i<pos ; i++){
+			sum+=a[i];
+			backtrack(i+1);
+			sum-=a[i];
+	}
+}
+
+int main() {
+	while(cin>>n){
+		bool flag = true;
+		for(int i=0 ; i<n ; i++) cin>>a[i];
+		for(int i=0 ; i<n-1 ; i++)
+			if(a[i] >= a[i+1]){
+				flag = false;
+				break;
+			}
+
+		if(!flag){
+			cout<<"Case #"<<Case++<<": ";
+			for(int i=0 ; i<n ; i++)(i != n-1) ? cout<<a[i]<<' ' : cout<<a[i]<<endl;
+			cout<<"This is not an A-sequence."<<endl;
+		}
+		else{
+			for(int i=0 ; i<n ; i++){
+				pos = i;
+				total = a[i];
+				backtrack(0);
+				sum = 0;
+				if(!seq){
+					cout<<"Case #"<<Case++<<": ";
+					for(int i=0 ; i<n ; i++)(i != n-1)? cout<<a[i]<<' ' : cout<<a[i]<<endl;
+					cout<<"This is not an A-sequence."<<endl;
+					sum = 0;
+					seq = true;
+					break;
+				}
+				else if(i == n-1 and seq){
+					cout<<"Case #"<<Case++<<": ";
+					for(int i=0 ; i<n ; i++)(i != n-1)? cout<<a[i]<<' ' : cout<<a[i]<<endl;
+					cout<<"This is an A-sequence."<<endl;
+					sum = 0;
+					seq = true;
+				}
+				else seq = true;
+			}
+		}
+	}
+}
