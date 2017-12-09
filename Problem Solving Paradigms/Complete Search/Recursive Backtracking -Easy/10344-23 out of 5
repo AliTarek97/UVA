@@ -1,0 +1,43 @@
+#include <bits/stdc++.h>
+using namespace std;
+int a[5] , n , sum;
+bool flag;
+void backtrack(int u){
+	if(u == 5 or flag){
+		if(sum == 23)flag = 1;
+		return;
+	}
+	if (u > 4) return;
+	sum = sum + a[u];
+	backtrack(u + 1);
+	sum = sum - a[u];
+
+	sum = sum * a[u];
+	backtrack(u + 1);
+	sum = sum / a[u];
+
+	sum = sum - a[u];
+	backtrack(u + 1);
+	sum = sum + a[u];
+}
+int main() {
+	while(1){
+		sum = 0;
+		for(int i=0 ; i<5 ; i++){
+			cin>>a[i];
+			sum += a[i];
+		}
+		
+		if(sum == 0) return 0;
+		sort(a , a+5);
+		
+		do{
+			sum = a[0];
+			backtrack(1);
+		}while( next_permutation(a , a+5) );
+
+		if(flag)cout<<"Possible"<<endl;
+		else cout<<"Impossible"<<endl;
+		flag = false;
+	}
+}
