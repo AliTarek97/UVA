@@ -1,0 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+int t , n;
+double a[105][105];
+map<int , vector<pair<int , double>>>adj;
+bool vis[105];
+
+double prim(){
+	// weight , node
+	 priority_queue<pair<double, int>, vector<pair<double, int>>, greater<pair<double, int>>> pq;
+	 pq.push({0 , 0});
+	 double cost = 0;
+
+	 while(!pq.empty()){
+		 auto cur = pq.top();
+		 pq.pop();
+
+		 if(vis[cur.second]++) continue;
+		 cost += cur.first;
+
+		 for(auto child : adj[cur.second]) pq.push({child.second , child.first});
+	 }
+	 return cost;
+}
+int main() {
+	ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+	cin>>t;
+
+	while(t--){
+		cin >> n;
+
+		for (int i = 0; i < n; i++)cin >> a[i][0] >> a[i][1];
+
+		// node , weight
+		for (int i = 0; i < n; i++) {
+			for (int j = i + 1; j < n; j++) {
+				adj[i].push_back({ j, hypot(a[i][0] - a[j][0], a[i][1] - a[j][1]) });
+				adj[j].push_back({ i, hypot(a[i][0] - a[j][0], a[i][1] - a[j][1]) });
+			}
+		}
+		if(!t)cout << fixed << setprecision(2) << prim()<<endl;
+		else cout << fixed << setprecision(2) << prim()<<endl<<endl;
+
+		adj.clear();
+		for(int i=0 ; i<105 ; i++) vis[i] = 0;
+	}
+}
