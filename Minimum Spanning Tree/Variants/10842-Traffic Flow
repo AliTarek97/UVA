@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+int t , n , m;
+vector< pair<int , int> > adj[105]; // node , weight
+vector<int> MST;
+bool vis[105];
+
+void prim(){
+	// weight , node
+	 priority_queue< pair<int , int> > pq;
+	 pq.push({2000 , 0});
+
+	 while(!pq.empty()){
+		 auto cur = pq.top();
+		 pq.pop();
+
+		 if(vis[cur.second]++) continue;
+		 MST.push_back(cur.first);
+		 for(auto child : adj[cur.second]) pq.push({child.second , child.first});
+	 }
+}
+
+int main() {
+	ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+	cin>>t;
+
+	for(int T=1 ; T<=t ; T++){
+		cin >> n >> m;
+
+		for(int i=0 ; i<m ; i++){
+			int u , v , c;
+			cin>>u>>v>>c;
+			adj[u].push_back({v , c});
+			adj[v].push_back({u , c});
+		}
+
+		prim();
+
+		cout<<"Case #"<<T<<": "<<*min_element(MST.begin() , MST.end() )<<endl;
+
+		for(int i=0 ; i<105 ; i++) adj[i].clear() , vis[i] = 0 ;
+		MST.clear();
+	}
+}
