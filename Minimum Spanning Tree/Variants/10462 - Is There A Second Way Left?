@@ -1,0 +1,102 @@
+#include <bits/stdc++.h>
+using namespace std;
+int t;
+vector<pair<int , int> > adj[105];
+vector<pair<int , pair<int,int> > > edge , v; //parent , node
+int dist[105][105];
+struct Edge {
+	int node, par, cost;
+	bool operator < (const Edge &other) const {
+		return other.cost < cost;
+	}
+};
+bool vis[105];
+int prim(){
+	priority_queue<Edge> pq;
+	pq.push({1 , -1 , 0});
+	int ret = 0;
+
+	while(!pq.empty()){
+		auto cur = pq.top();
+		pq.pop();
+
+		if(vis[cur.node]++) continue;
+		if(cur.par != -1) edge.push_back({cur.par , {cur.node , cur.cost} } );
+		ret+=cur.cost;
+
+		for(auto child : adj[cur.node])
+			pq.push({child.first , cur.node , child.second});
+	}
+
+	return ret;
+}
+
+void dfs(int node){
+	vis[node] = 1;
+
+	for(auto child : adj[node]){
+		if(!vis[child.first]) dfs(child.first);
+	}
+}
+int main() {
+	ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+	cin>>t;
+	for(int j=1 ; j<=t ; j++){
+
+		memset(dist , 0x3f , sizeof dist);
+		memset(vis , 0 , sizeof vis);
+		edge.clear();
+		v.clear();
+		for(int i=0 ; i<105 ; i++) adj[i].clear();
+
+		int n , m;
+		cin>>n>>m;
+
+		for(int i=0 ; i<m ; i++){
+			int a , b , c;
+			cin>>a>>b>>c;
+			adj[a].push_back({b , c});
+			adj[b].push_back({a , c});
+		}
+
+		int c = 0;
+		for(int i=1 ; i<=n ; i++){
+			if(!vis[i]){
+				c++;
+				dfs(i);
+			}
+		}
+		if(c>1){
+			cout<<"Case #"<<j<<" : "<<"No way"<<endl;
+			continue;
+		}
+
+		memset(vis , 0 , sizeof vis);
+		int ans = prim() , ans1 = 1e5;
+
+		memset(vis , 0 , sizeof vis);
+		v=edge;
+
+		for(int i=0 ; i<(int)v.size() ; i++){
+    
+			for(int k=0 ; k<(int)adj[v[i].first].size() ; k++){
+      
+				if(adj[v[i].first][k].first == v[i].second.first and adj[v[i].first][k].second == v[i].second.second){
+					//check if that the same node and cost in MST path
+          
+					memset(vis , 0 , sizeof vis);
+					int temp = v[i].second.second; //cost in adj_list
+					adj[v[i].first][k].second = 1e5; // set cost in adj.list to 1e5 to mark it as untaken
+					ans1 = min(ans1 , prim());
+					adj[v[i].first][k].second = temp;
+				}
+			}
+		}
+    
+		if(ans1 >= 1e5) cout<<"Case #"<<j<<" : "<<"No second way"<<endl;
+		else cout<<"Case #"<<j<<" : "<<ans1<<endl;
+
+	}
+
+}
