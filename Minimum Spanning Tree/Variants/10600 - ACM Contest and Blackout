@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+using namespace std;
+int t;
+vector<int> adj[105];
+vector<pair<int,int>> edge; //parent , node
+int dist[105][105];
+struct Edge {
+	int node, par, cost;
+	bool operator < (const Edge &other) const {
+		return other.cost < cost;
+	}
+};
+bool vis[105];
+int prim(){
+	priority_queue<Edge> pq;
+	pq.push({1 , -1 , 0});
+	int ret = 0;
+
+	while(!pq.empty()){
+		auto cur = pq.top();
+		pq.pop();
+
+		if(vis[cur.node]++) continue;
+		if(cur.par != -1) edge.push_back({cur.par , cur.node});
+		ret+=cur.cost;
+
+		for(auto child : adj[cur.node])
+			pq.push({child , cur.node , dist[cur.node][child]});
+	}
+
+	return ret;
+}
+int main() {
+	ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+
+	cin>>t;
+	while(t--){
+		memset(dist , 0x3f , sizeof dist);
+		memset(vis , 0 , sizeof vis);
+		edge.clear();
+		for(int i=0 ; i<105 ; i++) adj[i].clear();
+		int n , m;
+		cin>>n>>m;
+
+		for(int i=0 ; i<m ; i++){
+			int a , b , c;
+			cin>>a>>b>>c;
+			adj[a].push_back(b);
+			adj[b].push_back(a);
+			dist[a][b] = c;
+			dist[b][a] = c;
+		}
+
+		int ans1 = prim() , ans = 1e5;
+
+
+		memset(vis , 0 , sizeof vis);
+		vector<pair<int,int>> v;
+		v=edge;
+
+		for(int i=0 ; i<(int)v.size() ; i++){
+			memset(vis , 0 , sizeof vis);
+			int temp = dist[v[i].first][v[i].second];
+			dist[v[i].first][v[i].second] = 1e9;
+			ans = min (ans , prim());
+			dist[v[i].first][v[i].second] = temp;
+		}
+
+		cout<<ans1<<' '<<ans<<endl;
+	}
+
+}
